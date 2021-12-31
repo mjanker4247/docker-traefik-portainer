@@ -1,0 +1,24 @@
+---
+version: "2"
+services:
+  speedtest:
+    image: joelvaneenwyk/speedtest-analyzer
+    container_name: speedtest
+    volumes:
+      - ./html/data/:/usr/share/nginx/html/data
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=proxy"
+      - "traefik.http.routers.speedtest-secure.entrypoints=websecure"
+      - "traefik.http.routers.speedtest-secure.rule=Host(`speedtest.ululuu.de`)"
+      - "traefik.http.routers.speedtest-secure.service=speedtest"
+      - "traefik.http.services.speedtest.loadbalancer.server.port=80"
+
+networks:
+  proxy:
+    external: true
