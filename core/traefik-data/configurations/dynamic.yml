@@ -1,18 +1,50 @@
 # Dynamic configuration
 http:
   middlewares:
-    secureHeaders:
+    middlewares-rate-limit:
+      rateLimit:
+        average: 100
+        burst: 50
+    middlewares-oauth:
+      forwardAuth:
+        address: "http://oauth:4181" # Make sure you have the OAuth service in docker-compose.yml
+        trustForwardHeader: true
+        authResponseHeaders: 
+          - "X-Forwarded-User"
+    chain-oauth:
+      chain:
+        middlewares:
+          - "middlewares-rate-limit"
+          - "middlewares-secure-headers"
+          - "middlewares-oauth"
+    user-auth:
+      basicAuth:
+        users:
+          - "marco:$apr1$2dxBj0s3$lWnTd90H27bovM05juPXE."
+    middlewares-secure-headers:
       headers:
         sslRedirect: true
         forceSTSHeader: true
         stsIncludeSubdomains: true
         stsPreload: true
         stsSeconds: 31536000
-
-    user-auth:
-      basicAuth:
-        users:
-          - "raf:$apr1$MTqfVwiE$FKkzT5ERGFqwH9f3uipxA1"
+        accessControlAllowMethods:
+          - GET
+          - OPTIONS
+          - PUT
+        accessControlMaxAge: 100
+        hostsProxyHeaders:
+          - X-Forwarded-Host
+        customFrameOptionsValue: 'allow-from https:ululuu.de'
+        contentTypeNosniff: true
+        browserXssFilter: true
+        referrerPolicy: same-origin
+        featurePolicy: >-
+          camera 'none'; geolocation 'none'; microphone 'none'; payment 'none';
+          usb 'none'; vr 'none';
+        customResponseHeaders:
+          X-Robots-Tag: 'none,noarchive,nosnippet,notranslate,noimageindex,'
+          server: ''
 
 tls:
   options:
