@@ -1,4 +1,16 @@
-core/portainer-data/portainer.db
+*.db
 *.bak
 *.pem
 *.key
+senaite
+mailcow-dockerized
+monero
+lims
+jupyter-nb
+youtube-dl
+youtube-dl-webui
+pihole
+yt-dlp
+homer
+alltube
+result.csv
