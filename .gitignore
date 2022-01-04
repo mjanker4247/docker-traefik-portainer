@@ -17,6 +17,7 @@ pihole
 yt-dlp
 homer
 alltube
+# Speedtest results
 result.csv
 # Traefik SSL certificates
-core/traefik-data/acme.json
+acme.json
