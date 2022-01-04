@@ -1,1 +1,4 @@
 core/portainer-data/portainer.db
+*.bak
+*.pem
+*.key
