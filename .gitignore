@@ -1,7 +1,11 @@
+# Databases
 *.db
+# Certificates
 *.bak
 *.pem
 *.key
+*.pub
+# Folders
 senaite
 mailcow-dockerized
 monero
@@ -14,3 +18,4 @@ yt-dlp
 homer
 alltube
 result.csv
+
