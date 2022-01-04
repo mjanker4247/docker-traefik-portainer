@@ -18,4 +18,5 @@ yt-dlp
 homer
 alltube
 result.csv
-
+# Traefik SSL certificates
+core/traefik-data/acme.json
