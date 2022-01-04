@@ -13,11 +13,13 @@ services:
       - proxy
     labels:
       - "traefik.enable=true"
-      - "traefik.docker.network=proxy"
       - "traefik.http.routers.speedtest-secure.entrypoints=websecure"
       - "traefik.http.routers.speedtest-secure.rule=Host(`speedtest.ululuu.de`)"
-      - "traefik.http.routers.speedtest-secure.service=speedtest"
-      - "traefik.http.services.speedtest.loadbalancer.server.port=80"
+      - "traefik.http.routers.speedtest-secure.service=speedtest-svc"
+      # Enable Google Authentication
+      - "traefik.http.routers.speedtest-secure.middlewares=chain-oauth@file"
+      # Service
+      - "traefik.http.services.speedtest-svc.loadbalancer.server.port=80"
 
 networks:
   proxy:

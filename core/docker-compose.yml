@@ -6,7 +6,7 @@ services:
     container_name: traefik
     restart: unless-stopped
     security_opt:
-      - no-new-privileges:true
+      - no-new-privileges=true
     networks:
       - proxy
     ports:
@@ -20,7 +20,6 @@ services:
       - ./traefik-data/configurations:/configurations
     labels:
       - "traefik.enable=true"
-      - "traefik.docker.network=proxy"
       - "traefik.http.routers.traefik-secure.entrypoints=websecure"
       - "traefik.http.routers.traefik-secure.rule=Host(`traefik.ululuu.de`)"
       - "traefik.http.routers.traefik-secure.middlewares=middlewares-secure-headers@file,middlewares-rate-limit@file,chain-oauth@file"
@@ -44,19 +43,18 @@ services:
       - "traefik.http.routers.portainer-secure.entrypoints=websecure"
       - "traefik.http.routers.portainer-secure.rule=Host(`portainer.ululuu.de`)"
       - "traefik.http.routers.portainer-secure.middlewares=chain-oauth@file"
-      - "traefik.http.routers.portainer-secure.service=portainer"
-      - "traefik.http.services.portainer.loadbalancer.server.port=9000"
+      - "traefik.http.routers.portainer-secure.service=portainer-svc"
+      - "traefik.http.services.portainer-svc.loadbalancer.server.port=9000"
 
 # Google OAuth - Single Sign On using OAuth 2.0 for Traefik 2.2
   oauth:
     container_name: oauth
     image: thomseddon/traefik-forward-auth:latest
-    # image: thomseddon/traefik-forward-auth:2.1-arm # Use this image with Raspberry Pi
     restart: unless-stopped
     networks:
       - proxy
     security_opt:
-      - no-new-privileges:true
+      - no-new-privileges=true
     environment:
       - CLIENT_ID=911317711309-pc7elr169qpolko3bpa11fpcnhsn8r7d.apps.googleusercontent.com
       - CLIENT_SECRET=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
@@ -66,21 +64,20 @@ services:
       - AUTH_HOST=oauth.ululuu.de
       - URL_PATH=/_oauth
       - WHITELIST=marco.janker@gmail.com
-      - LOG_LEVEL=warn
+      - LOG_LEVEL=debug
       - LOG_FORMAT=text
       - LIFETIME=2592000 # 30 days
       - DEFAULT_ACTION=auth
       - DEFAULT_PROVIDER=google
     labels:
       - "traefik.enable=true"
+      - "traefik.docker.network=proxy"
       ## HTTP Routers
-      - "traefik.http.routers.oauth-rtr.entrypoints=websecure"
-      - "traefik.http.routers.oauth-rtr.rule=Host(`oauth.ululuu.de`)"
-      - "traefik.http.routers.oauth-rtr.tls=true"
-      ## Middlewares
-      - "traefik.http.routers.oauth-rtr.middlewares=chain-oauth@file"
+      - "traefik.http.routers.oauth-secure.entrypoints=websecure"
+      - "traefik.http.routers.oauth-secure.rule=Host(`oauth.ululuu.de`)"
+      - "traefik.http.routers.oauth-secure.middlewares=chain-oauth@file"
+      - "traefik.http.routers.oauth-secure.service=oauth-svc"
       ## HTTP Services
-      - "traefik.http.routers.oauth-rtr.service=oauth-svc"
       - "traefik.http.services.oauth-svc.loadbalancer.server.port=4181"
 
 networks:
