@@ -21,3 +21,7 @@ alltube
 result.csv
 # Traefik SSL certificates
 acme.json
+# Transmission
+apps/transmission/downloads
+apps/transmission/watch
+apps/transmission/config
