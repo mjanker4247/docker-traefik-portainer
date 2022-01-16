@@ -1,0 +1,32 @@
+version: "3"
+
+services:
+  transmission:
+    image: "linuxserver/transmission"
+    container_name: transmission
+    ports:
+      - 9091:9091 
+      - 51413:51413
+      - 51413:51413/udp
+    volumes:
+      - ./config:/config
+      - ./downloads:/downloads
+      - ./watch:/watch
+    environment:
+      - TZ=Europe/Berlin
+      - PUID=1000
+      - PGID=1000
+    restart: unless-stopped
+    # networks:
+    #   - proxy
+    # labels:
+    #   - "traefik.enable=true"
+    #   - "traefik.docker.network=proxy"
+    #   - "traefik.http.routers.transmission-secure.entrypoints=websecure"
+    #   - "traefik.http.routers.transmission-secure.rule=Host(`transmission.ululuu.de`)"
+    #   - "traefik.http.routers.transmission-secure.service=transmission-svc"
+    #   - "traefik.http.services.transmission-svc.loadbalancer.server.port=9091"
+
+# networks:
+#   proxy:
+#     external: true
